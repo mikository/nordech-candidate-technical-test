@@ -9,7 +9,8 @@
     ];
     function s($array)
     {
-            for ($i=0;$i<sizeof($array)-1;$i++)
+            asort($array);
+            /*for ($i=0;$i<sizeof($array)-1;$i++)
             {
                     for ($j=$i+1;$j<sizeof($array);$j++)
                     {
@@ -22,7 +23,7 @@
                                     }
                             }
                     }
-            }
+            }*/
             return $array;
     }
 
