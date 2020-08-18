@@ -2,7 +2,7 @@
 session_start();
 // connect to database
 try {
-    $pdo = new PDO("mysql:host=localhost;dbname=nordech_challenge", "USERNAME", "PASSWORD", [
+    $pdo = new PDO("mysql:host=localhost;dbname=nordech_challenge", "root", "", [
                         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                         PDO::ATTR_EMULATE_PREPARES => false,
@@ -39,24 +39,7 @@ function doLogin($pdo) {
             $_SESSION['user_found'] = true;
             return 5;
         }
-        if($givenUser['passwordExpire'] < date("Y-m-d H:i:s")) {
-            // Has the password expired?
-            $_SESSION['login_success'] = false;
-            $_SESSION['user_found'] = true;
-            return 6;
-        }        
-        if($givenUser['lockedOut']===true) {
-            // is user locked out?
-            $_SESSION['login_success'] = false;
-            $_SESSION['user_found'] = true;
-            return 7;
-        }
-        if($givenUser['lockedoutUntil'] && $givenUser['lockedoutUntil'] > date("Y-m-d H:i:s")) {
-            // is a lockout time set and is is in to the future?
-            $_SESSION['login_success'] = false;
-            $_SESSION['user_found'] = true;
-            return 8;
-        }
+        
         // all cases success, reset login attempts and remove lockout time.
         updateTable($pdo, "Users", "loginAttempts", 0, "ID", $givenUser['ID']);
         updateTable($pdo, "Users", "lockedOut", 0, "ID", $givenUser['ID']);
@@ -93,6 +76,7 @@ $loginCode = doLogin($pdo);
         <div class="success">
             Login successful!
             <span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span>
+            <a href="../unis.php">See Universities</a>
         </div>            
         ';
     } else {
